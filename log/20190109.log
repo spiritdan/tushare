@@ -1,0 +1,1 @@
+2019-01-09 23:59:20,ERROR,updateStockBasic.py,update_stock_base,(1045, "Access denied for user 'root'@'localhost' (using password: YES)")

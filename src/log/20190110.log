@@ -1,0 +1,4 @@
+2019-01-10 00:19:52,ERROR,updateStockData.py,update_stock_data,(1049, "Unknown database 'stock'")
+2019-01-10 00:34:42,INFO,updateStockBasic.py,update_stock_base,finish update stock basic
+2019-01-10 00:35:13,INFO,updateStockData.py,update_stock_data,000001.SZ,插入所有数据
+2019-01-10 00:35:13,INFO,updateStockData.py,update_stock_data,finish update stock data
