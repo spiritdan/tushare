@@ -73,3 +73,12 @@ CREATE TABLE `stock_daily` (
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
 -- Dump completed on 2018-12-16 16:16:10
+CREATE TABLE `sz000002` (
+  `日期` date DEFAULT NULL,
+  `时间` varchar(10) NOT NULL,
+  `成交价` varchar(10) NOT NULL,
+  `价格变动` varchar(45) NOT NULL,
+  `成交量(手)` varchar(45) DEFAULT NULL,
+  `成交额(元)` varchar(45) DEFAULT NULL,
+  `性质` varchar(45) DEFAULT NULLsz000002
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

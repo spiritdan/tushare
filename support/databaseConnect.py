@@ -10,7 +10,7 @@ import pandas as pd
 
 #mysql数据库连接
 @contextlib.contextmanager
-def mysql_operator(host='localhost', user='root', password='abc.123', db='sys', port=3306):
+def mysql_operator(host='127.0.0.1', user='root', password='abc.123', db='sys', port=3306):
     conn = pymysql.connect(host = host,port = port,user = user,passwd = password,db = db)
     cursor = conn.cursor()
     try:
@@ -21,7 +21,7 @@ def mysql_operator(host='localhost', user='root', password='abc.123', db='sys', 
         conn.close()
 
 @contextlib.contextmanager
-def pandas_mysql_read(sql,index_clo=None,host='localhost', user='root', password='', db='sys', port=3306):
+def pandas_mysql_read(sql,index_clo=None,host='localhost', user='root', password='abc.123', db='sys', port=3306):
     conn = pymysql.connect(host=host, port=port, user=user, passwd=password, db=db)
     df = pd.read_sql(sql, con=conn,index_col=index_clo)
     try:

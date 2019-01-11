@@ -1,47 +1,77 @@
-#!/usr/bin/python3
-# -*- coding: utf-8 -*-
-# pylint: disable=no-member
-#上面一行解决vscode 中ts.pro_api()无此成员BUG pylint 的 *E1101* 错误
-import pymysql
 import time
+import requests
+import bs4
 import datetime
-
+import pymysql
 from support import log
 from support import databaseConnect
 
-import tushare as ts
-
-stock_log = log.logInit("fileoutput")  # log初始化
 
 
-def update_stock_data(api, stock_code):
+def update_stock_data(data_list):
     try:
-        start_dt = '20190109'
-        time_temp = datetime.datetime.now() - datetime.timedelta(days=1)
-        end_dt = time_temp.strftime('%Y%m%d')
-        df = ts.pro_bar(pro_api=api, ts_code=stock_code, adj='qfq', start_date=start_dt, end_date=end_dt,freq='60min')  # 获取数据
-        stock_data = df.where(df.notnull(), None)  # 将Nan转换为None
-
-        # df = ts.pro_bar(pro_api=api, ts_code=stock_code, adj='qfq')  # 获取数据
-        # stock_data = df.where(df.notnull(), None)  # 将Nan转换为None
-
-        data_list = []
-
-        for row in stock_data.itertuples(index=False, name=None):  # 将dataframe转换为list
-            data_list.append(row)
-            print(row)
-
+         with databaseConnect.mysql_operator(db='stock') as cursor:
+           cursor.executemany("""insert into stock.sz000002 values (%s,%s,%s,%s,%s,%s,%s)""", data_list)
 
     except pymysql.Error as e:
-        stock_log.error(e)
+        print(e)
     except:
-        stock_log.error('other error')
+        print('other error')
     else:
-        stock_log.info('finish update stock data')
+        print('finish update stock data')
+
+
+
+def get_details(code,date,page):
+    details=[]
+    for page in range(page,0,-1):
+
+        url = 'http://market.finance.sina.com.cn/transHis.php?symbol={0}&date={1}&page={2}'.format(code,date,page)
+        req = requests.get(url).content.decode('gbk')
+        bscode = bs4.BeautifulSoup(req, 'html.parser')
+        list_info = bscode.select('tbody>tr')
+        #print(date)
+        #print(list_info)
+        #如果列表为空跳出
+        if not list_info:
+            break
+        for info in list_info:
+            temp = []
+            temp.append(date)
+            temp.append(info.select('th')[0].getText())
+            data=info.select('td')
+            for i in range(len(data)):
+                temp.append(data[i].getText())
+            temp.append(info.select('th')[1].getText())
+            details.append(temp)
+            print(temp)
+        time.sleep(5)
+        #print(details)
+    return details
+
+def string_toDatetime(date):
+    day_list=[]
+    dt = datetime.datetime.strptime(date,"%Y-%m-%d")
+    now = datetime.datetime.now()
+    print(now)
+    print(dt)
+
+    minus_days=(now-dt)
+    print(minus_days)
+
+    for i in range(minus_days.days+1):
+        new_dt = dt + datetime.timedelta(days=int('+{0}'.format(i)))
+        #print(new_dt.strftime('%Y-%m-%d'))
+        day_list.append(new_dt.strftime('%Y-%m-%d'))
+    return day_list
 
 
 if __name__ == '__main__':
-        #旧c34877586f962f39f0c69de2a027c30fba8eb05bda5a1f9ae525449b
-#新c8c44b9ef173fa35b3a09aadb7cf4c2f0513c232f8a4c6ca608b81f1
-    pro = ts.pro_api('06645505054699358268a42f4a21f23eb95c0ce218bd2c2980242e19')
-    update_stock_data(pro, '000001.SZ')
+    #details=get_details('sz000002','2018-12-14',70)
+    #print(details)
+
+    day_list=string_toDatetime('1991-01-01')
+    for day in day_list:
+        details = get_details('sz000002', day, 70)
+        update_stock_data(details)
+        print(details)
