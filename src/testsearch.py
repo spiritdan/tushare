@@ -29,9 +29,10 @@ def get_details(code,date,page):
         url = 'http://market.finance.sina.com.cn/transHis.php?symbol={0}&date={1}&page={2}'.format(code,date,page)
         req = requests.get(url).content.decode('gbk')
         bscode = bs4.BeautifulSoup(req, 'html.parser')
+        print(bscode)
         list_info = bscode.select('tbody>tr')
-        #print(date)
-        #print(list_info)
+        print(date)
+        print(list_info)
         #如果列表为空跳出
         if not list_info:
             break
@@ -45,7 +46,7 @@ def get_details(code,date,page):
             temp.append(info.select('th')[1].getText())
             details.append(temp)
             print(temp)
-        time.sleep(5)
+        time.sleep(15)
         #print(details)
     return details
 
@@ -70,8 +71,9 @@ if __name__ == '__main__':
     #details=get_details('sz000002','2018-12-14',70)
     #print(details)
 
-    day_list=string_toDatetime('1991-01-01')
-    for day in day_list:
+    day_list=string_toDatetime('2004-10-08')
+    print(day_list)
+    for day in day_list[: :-1]:
         details = get_details('sz000002', day, 70)
         update_stock_data(details)
         print(details)
