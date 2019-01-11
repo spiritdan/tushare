@@ -16,7 +16,7 @@ stock_log = log.logInit("fileoutput")  # log初始化
 
 def update_stock_data(api, stock_code):
     try:
-        start_dt = '20180101'
+        start_dt = '19900101'
         time_temp = datetime.datetime.now() - datetime.timedelta(days=1)
         end_dt = time_temp.strftime('%Y%m%d')
         df = ts.pro_bar(pro_api=api, ts_code=stock_code, adj='qfq', start_date=start_dt, end_date=end_dt)  # 获取数据
@@ -29,6 +29,7 @@ def update_stock_data(api, stock_code):
 
         for row in stock_data.itertuples(index=False, name=None):  # 将dataframe转换为list
             data_list.append(row)
+            #print(row)
 
         with databaseConnect.mysql_operator(db='stock') as cursor:
             cursor.execute("""select open,trade_date from stock.stock_daily where ts_code 
@@ -65,5 +66,5 @@ def update_stock_data(api, stock_code):
 if __name__ == '__main__':
         #旧c34877586f962f39f0c69de2a027c30fba8eb05bda5a1f9ae525449b
 #新c8c44b9ef173fa35b3a09aadb7cf4c2f0513c232f8a4c6ca608b81f1
-    pro = ts.pro_api('c8c44b9ef173fa35b3a09aadb7cf4c2f0513c232f8a4c6ca608b81f1')
+    pro = ts.pro_api('06645505054699358268a42f4a21f23eb95c0ce218bd2c2980242e19')
     update_stock_data(pro, '000001.SZ')

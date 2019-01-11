@@ -1,5 +1,5 @@
-from tushare.support import log
-from tushare.support import databaseConnect
+from support import log
+from support import databaseConnect
 
 import pandas as pd
 

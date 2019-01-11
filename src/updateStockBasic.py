@@ -56,5 +56,5 @@ def get_stock_base():
 if __name__ == '__main__':
     #旧c34877586f962f39f0c69de2a027c30fba8eb05bda5a1f9ae525449b
 #新c8c44b9ef173fa35b3a09aadb7cf4c2f0513c232f8a4c6ca608b81f1
-    pro = ts.pro_api('c8c44b9ef173fa35b3a09aadb7cf4c2f0513c232f8a4c6ca608b81f1')
+    pro = ts.pro_api('06645505054699358268a42f4a21f23eb95c0ce218bd2c2980242e19')
     update_stock_base(pro)

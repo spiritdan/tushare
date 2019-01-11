@@ -2,3 +2,4 @@
 2019-01-10 00:34:42,INFO,updateStockBasic.py,update_stock_base,finish update stock basic
 2019-01-10 00:35:13,INFO,updateStockData.py,update_stock_data,000001.SZ,插入所有数据
 2019-01-10 00:35:13,INFO,updateStockData.py,update_stock_data,finish update stock data
+2019-01-10 14:51:02,INFO,updateStockData.py,update_stock_data,finish update stock data

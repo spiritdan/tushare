@@ -6,9 +6,9 @@ __author__ = 'Simon Xu'
 """
 for support
 """
-from tushare.support import log,databaseConnect
+from support import log,databaseConnect
 
 """
 for src
 """
-from tushare.src import updateStockBasic,updateStockData
+from src import updateStockBasic,updateStockData

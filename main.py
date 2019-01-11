@@ -4,7 +4,7 @@
 #上面一行解决vscode 中ts.pro_api()无此成员BUG pylint 的 *E1101* 错误
 import tushare as ts
 import time
-
+from support import readConfig
 from src import updateStockBasic
 from src import updateStockData
 
