@@ -22,15 +22,34 @@ def update_stock_data(data_list):
 
 
 
-def get_details(code,date,page):
+def get_details(code,date):
     details=[]
-    for page in range(page,0,-1):
+
+    url = 'http://market.finance.sina.com.cn/transHis.php?symbol={0}&date={1}&page={2}'.format(code, date, 1)
+    req = requests.get(url).content.decode('gbk')
+    #print(req)
+    bscode = bs4.BeautifulSoup(req, 'html.parser')
+    list_info = bscode.select('tbody>tr')
+    page_bs4 = bscode.select('script[language="javascript"]')
+    a = page_bs4[0].getText().split()
+    get_page = [i for i, x in enumerate(a) if x.find('detailPages') != -1]
+    index = int(get_page[0])
+    page_num = eval(a[index].split('=')[-1].replace(';', ''))[-1][0]
+    print(date)
+    print(page_num)
+    for page in range(page_num,0,-1):
 
         url = 'http://market.finance.sina.com.cn/transHis.php?symbol={0}&date={1}&page={2}'.format(code,date,page)
         req = requests.get(url).content.decode('gbk')
+        #print(req)
         bscode = bs4.BeautifulSoup(req, 'html.parser')
         list_info = bscode.select('tbody>tr')
-        #print(date)
+        page_bs4=bscode.select('script[language="javascript"]')
+        a=page_bs4[0].getText().split()
+        get_page=[i for i, x in enumerate(a) if x.find('detailPages') != -1]
+        index=int(get_page[0])
+        page_num=eval(a[index].split('=')[-1].replace(';',''))[-1][0]
+        print(date)
         #print(list_info)
         #如果列表为空跳出
         if not list_info:
@@ -67,11 +86,13 @@ def string_toDatetime(date):
 
 
 if __name__ == '__main__':
-    #details=get_details('sz000002','2018-12-14',70)
-    #print(details)
+    details=get_details('sz000002','2005-12-14')
+    print(details)
+'''
 
-    day_list=string_toDatetime('1991-01-01')
+    day_list=string_toDatetime('2018-10-08')
     for day in day_list:
         details = get_details('sz000002', day, 70)
         update_stock_data(details)
         print(details)
+'''
