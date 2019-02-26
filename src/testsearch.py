@@ -49,9 +49,9 @@ def get_details(code,date):
         print(page_num)
 
         #把所有页内容爬出来放入一个列表，整个列表一起返回
-        #for page in range(page_num,0,-1):
+        for page in range(page_num,0,-1):
         #以下注释只跑一页测试数据库写入
-        for page in range(1, 0, -1):
+        #for page in range(1, 0, -1):
             print(page)
             url = 'http://market.finance.sina.com.cn/transHis.php?symbol={0}&date={1}&page={2}'.format(code,date,page)
             req = requests.get(url).content.decode('gbk')
@@ -65,7 +65,7 @@ def get_details(code,date):
             page_num=eval(a[index].split('=')[-1].replace(';',''))[-1][0]
             print(date)
             #print(list_info)
-            #如果列表为空跳出
+            #如果列表为空跳出，为空有两种情况1，当日无数据。2，被反爬，暂时无法查询。此时break整个列表都为空。待下次下载时检查改日期，重新下载。
             if not list_info:
                 break
             for info in list_info:
@@ -78,13 +78,14 @@ def get_details(code,date):
                 temp.append(info.select('th')[1].getText())
                 details.append(temp)
                 print(temp)
-            time.sleep(2)
+            time.sleep(0.5)
             #print(details)
         return details
     except Exception as e:
         stock_log.error(e)
 
 #date起始日期,返回从起始日期到当前日期的列表
+#可以考虑法定节假日判断
 def string_toDatetime(date):
     day_list=[]
     dt = datetime.datetime.strptime(date,"%Y-%m-%d")
@@ -105,11 +106,11 @@ def string_toDatetime(date):
 if __name__ == '__main__':
    # details=get_details('sz000002','2004-10-08')
     #print(details)
-    check_stock_data()
+    #check_stock_data()
 
-    # day_list=string_toDatetime('2019-2-26')
-    # code='sz000001'
-    # for day in day_list:
-    #     details = get_details(code, day)
-    #     update_stock_data(code,details)
-    #     print(details)
+    day_list=string_toDatetime('2019-2-26')
+    code='sz000001'
+    for day in day_list:
+        details = get_details(code, day)
+        update_stock_data(code,details)
+        print(details)
