@@ -8,12 +8,15 @@ from support import databaseConnect
 database="stock"
 
 stock_log = log.logInit("fileoutput") #log初始化
-
-def check_stock_data():
+def check_stock_date():
     with databaseConnect.mysql_operator(db=database) as cursor:
         cursor.execute("""SELECT distinct `日期` FROM stock.sz000001;""")
-        stockList = cursor.fetchall()
-        print(stockList)
+        dateTruple = cursor.fetchall()
+        dateList=[]
+        for date in dateTruple:
+            dateList.append(date[0].strftime('%Y-%m-%d'))
+        #print(dateList)
+        return dateList
 #更新数据库
 def update_stock_data(code,data_list):
     sql=f'insert into {code} values (%s,%s,%s,%s,%s,%s,%s)'
@@ -105,9 +108,14 @@ def string_toDatetime(date):
 if __name__ == '__main__':
    # details=get_details('sz000002','2004-10-08')
     #print(details)
-    check_stock_data()
+    db_date_list=check_stock_date()
+    days=string_toDatetime('2019-1-1')
 
-    # day_list=string_toDatetime('2019-2-26')
+    db_date_set = set(db_date_list)
+    day_set=set(days)
+    #A、B set取差集，得到A中存在B中不存在的值
+    day_list=list(day_set - db_date_set)
+    print(day_list)
     # code='sz000001'
     # for day in day_list:
     #     details = get_details(code, day)
