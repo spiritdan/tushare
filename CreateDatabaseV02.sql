@@ -67,3 +67,13 @@ CREATE TABLE `financial_report` (
   CONSTRAINT `pk_financial_report` PRIMARY KEY (`financial_report_id`),
   CONSTRAINT `fk_financial_report` FOREIGN KEY (`stock_list_id`) REFERENCES stock_list(`stock_list_id`)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+
+CREATE TABLE `sz000001` (
+  `日期` date DEFAULT NULL,
+  `时间` varchar(10) NOT NULL,
+  `成交价` varchar(10) NOT NULL,
+  `价格变动` varchar(45) NOT NULL,
+  `成交量(手)` varchar(45) DEFAULT NULL,
+  `成交额(元)` varchar(45) DEFAULT NULL,
+  `性质` varchar(45) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
